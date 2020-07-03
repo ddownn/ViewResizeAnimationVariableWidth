@@ -13,6 +13,8 @@
 		7D5AE6B824AE137F00D693F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D5AE6B624AE137F00D693F6 /* Main.storyboard */; };
 		7D5AE6BA24AE138200D693F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D5AE6B924AE138200D693F6 /* Assets.xcassets */; };
 		7D5AE6BD24AE138200D693F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D5AE6BB24AE138200D693F6 /* LaunchScreen.storyboard */; };
+		7D5AE6C524AE209200D693F6 /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5AE6C424AE209200D693F6 /* ContainerView.swift */; };
+		7D5AE6C724AE216A00D693F6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5AE6C624AE216A00D693F6 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		7D5AE6B924AE138200D693F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D5AE6BC24AE138200D693F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D5AE6BE24AE138200D693F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D5AE6C424AE209200D693F6 /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
+		7D5AE6C624AE216A00D693F6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +63,8 @@
 				7D5AE6B024AE137F00D693F6 /* AppDelegate.swift */,
 				7D5AE6B224AE137F00D693F6 /* SceneDelegate.swift */,
 				7D5AE6B424AE137F00D693F6 /* ViewController.swift */,
+				7D5AE6C424AE209200D693F6 /* ContainerView.swift */,
+				7D5AE6C624AE216A00D693F6 /* Extensions.swift */,
 				7D5AE6B624AE137F00D693F6 /* Main.storyboard */,
 				7D5AE6B924AE138200D693F6 /* Assets.xcassets */,
 				7D5AE6BB24AE138200D693F6 /* LaunchScreen.storyboard */,
@@ -138,6 +144,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D5AE6C724AE216A00D693F6 /* Extensions.swift in Sources */,
+				7D5AE6C524AE209200D693F6 /* ContainerView.swift in Sources */,
 				7D5AE6B524AE137F00D693F6 /* ViewController.swift in Sources */,
 				7D5AE6B124AE137F00D693F6 /* AppDelegate.swift in Sources */,
 				7D5AE6B324AE137F00D693F6 /* SceneDelegate.swift in Sources */,
