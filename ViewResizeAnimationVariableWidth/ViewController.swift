@@ -14,22 +14,27 @@ class ViewController: UIViewController {
 	var lg = UILayoutGuide()
 
 	@IBOutlet weak var containerViewWidthSmall: NSLayoutConstraint!
+	@IBOutlet weak var containerViewWidthLarge: NSLayoutConstraint!
 
 	@IBOutlet var containerView: ContainerView!
 	var containerLayer: ContainerLayer!
 
-	@IBOutlet weak var toggleButton: UIButton!
+	@IBOutlet weak var rotateButton: UIButton!
+	@IBOutlet weak var resizeButton: UIButton!
 	var isLarge = false
 
 	override func loadView() {
 		super.loadView()
 
 		containerView.translatesAutoresizingMaskIntoConstraints = false
-//		containerView.contentMode = .redraw
+		containerView.contentMode = .redraw
 		containerView.backgroundColor = .clear
 
-		toggleButton.translatesAutoresizingMaskIntoConstraints = false
-		toggleButton.addTarget(self, action: #selector(self.toggleSize), for: .touchUpInside)
+		resizeButton.translatesAutoresizingMaskIntoConstraints = false
+		resizeButton.addTarget(self, action: #selector(self.resize(sender:)), for: .touchUpInside)
+
+		rotateButton.translatesAutoresizingMaskIntoConstraints = false
+		rotateButton.addTarget(self, action: #selector(self.rotate(sender:)), for: .touchUpInside)
 
 		containerLayer = containerView.layer as? ContainerLayer
 	}
@@ -41,44 +46,64 @@ class ViewController: UIViewController {
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-//		print("viewDidLayoutSubviews(): \(containerView.bounds)\n")
+		//		print("viewDidLayoutSubviews(): \(containerView.bounds)\n")
 	}
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 
 		self.isLarge.toggle()
+
 		self.updateConstraints()
+
+		let dur = 0.3
+		let start = 0.0
+
+		self.view.layoutIfNeeded()
+		UIView.animateKeyframes(withDuration: dur, delay: 0, animations: {
+			UIView.addKeyframe(withRelativeStartTime: start, relativeDuration: 1, animations: {
+				self.updateConstraints()
+			})
+			self.view.layoutIfNeeded()
+		})
 
 	}
 
 	func updateConstraints() {
 		containerViewWidthSmall.priority = isLarge ? .defaultHigh-1 : .defaultHigh+1
+		self.containerLayer.setNeedsDisplay()
+		self.view.layoutIfNeeded()
 	}
 
-	@objc func toggleSize(sender: Any) {
-		self.view.layoutIfNeeded()
-
-		isLarge.toggle()
-		self.updateConstraints()
-
-		animate(self.containerLayer)
-		self.containerLayer.transform = CATransform3DRotate(self.containerLayer.transform, pi/2, 0, 0, 1)
+	@objc func resize(sender: Any) {
 
 		self.view.layoutIfNeeded()
+		self.isLarge.toggle()
 
+		let dur = 0.3
+		let start = 0.0
+
+		UIView.animateKeyframes(withDuration: dur, delay: 0, animations: {
+			UIView.addKeyframe(withRelativeStartTime: start, relativeDuration: 1, animations: {
+				self.updateConstraints()
+			})
+			self.view.layoutIfNeeded()
+		})
 	}
 
-	func animate(_ layer: CALayer) {
-		let startValue = layer.transform
-		let endValue = CATransform3DRotate(startValue, pi/2, 0, 0, 1)
-		let ba = CABasicAnimation(keyPath: #keyPath(CALayer.transform))
-		ba.duration = 1
-		let clunk = CAMediaTimingFunction(controlPoints:0.9, 0.1, 0.7, 0.9)
-		ba.timingFunction = clunk
-		ba.fromValue = startValue
-		ba.toValue = endValue
-		layer.add(ba, forKey: nil)
-		layer.add(ba, forKey: nil)
+	@objc func rotate(sender: Any) {
+
+		self.view.layoutIfNeeded()
+		self.isLarge.toggle()
+
+		let dur = 0.3
+		let start = 0.0
+
+		UIView.animateKeyframes(withDuration: dur, delay: 0, animations: {
+			UIView.addKeyframe(withRelativeStartTime: start, relativeDuration: 1, animations: {
+				self.containerLayer.transform = CATransform3DRotate(self.containerLayer.transform, pi/2, 0, 0, 1)
+			})
+			self.view.layoutIfNeeded()
+		})
 	}
 }

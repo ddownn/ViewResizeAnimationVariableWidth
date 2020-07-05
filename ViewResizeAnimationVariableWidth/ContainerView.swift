@@ -15,7 +15,7 @@ class ContainerView: UIView {
 
 class ContainerLayer: CALayer, CALayerDelegate {
 
-	var circle = ShapeLayer()
+	var shape = ShapeLayer()
 
 	var didSetup = false
 
@@ -23,13 +23,11 @@ class ContainerLayer: CALayer, CALayerDelegate {
 	var figureDiameter: CGFloat { return min(self.bounds.width, self.bounds.height) }
 	var figureRadius: CGFloat { return figureDiameter / 2 }
 
-	var strokeWidth: CGFloat { return max(round(figureDiameter / 10), 1) }
+	var shapeDiameter: CGFloat { return round(figureDiameter / 5) }
+	var shapeRadius: CGFloat { return shapeDiameter/2 }
+	var locRadius: CGFloat { return figureRadius - shapeRadius }
 
-	var circleDiameter: CGFloat { return max(round(figureDiameter / 25), 5) }
-	var circleRadius: CGFloat { return circleDiameter/2 }
-	var locRadius: CGFloat { return figureRadius - circleRadius - strokeWidth }
-
-	var circleLineWidth: CGFloat = 1
+	var shapeLineWidth: CGFloat = 1
 
 	var unitLoc: CGPoint { return CGPoint(x: figureCenter.x + cos(-halfPi) * locRadius, y: figureCenter.y + sin(-halfPi) * locRadius) }
 
@@ -41,7 +39,7 @@ class ContainerLayer: CALayer, CALayerDelegate {
 			self.didSetup = true
 		}
 
-		updateCircleBounds()
+		updateShapeBounds()
 	}
 
 	func setup() {
@@ -49,43 +47,26 @@ class ContainerLayer: CALayer, CALayerDelegate {
 		self.backgroundColor = UIColor.systemYellow.cgColor
 		self.needsDisplayOnBoundsChange = true
 
-		self.circle.contentsScale = UIScreen.main.scale
-		self.addSublayer(circle)
+		self.shape.contentsScale = UIScreen.main.scale
+		self.addSublayer(shape)
 
-		self.circle.strokeWidth = circleLineWidth
-		self.circle.fColor = UIColor(red:0.9, green:0.95, blue:0.93, alpha:0.9).cgColor
-		self.circle.sColor = UIColor.black.cgColor
+		self.shape.strokeWidth = shapeLineWidth
+		self.shape.fColor = UIColor(red:0.9, green:0.95, blue:0.93, alpha:0.9).cgColor
+		self.shape.sColor = UIColor.black.cgColor
 	}
 
-	func updateCircleBounds() {
+	func updateShapeBounds() {
 
-		self.circle.bounds = CGRect(x: 0, y: 0, width: circleDiameter, height: circleDiameter)
-		self.circle.position = unitLoc
+		self.shape.bounds = CGRect(x: 0, y: 0, width: shapeDiameter, height: shapeDiameter)
+		self.shape.position = unitLoc
 
-		self.circle.updatePath()
+		self.shape.updatePath()
 	}
 
 	override func draw(in ctx: CGContext) {
 
-		var roundBorderPath: UIBezierPath { return UIBezierPath(ovalIn: self.bounds.insetBy(dx: strokeWidth/2, dy: strokeWidth/2)) }
-		var rectBorderPath: UIBezierPath { return UIBezierPath(rect: self.bounds.insetBy(dx: strokeWidth/2, dy: strokeWidth/2))}
-
-		ctx.addPath(roundBorderPath.cgPath)
-		ctx.setFillColor(UIColor(red:0.9, green:0.95, blue:0.93, alpha:0.5).cgColor)
-		ctx.fillPath()
-
-		ctx.addPath(rectBorderPath.cgPath)
-		ctx.setStrokeColor(UIColor.black.cgColor)
-		ctx.setLineWidth(strokeWidth)
-		ctx.strokePath()
-
-		ctx.addPath(roundBorderPath.cgPath)
-		ctx.setStrokeColor(UIColor(white: 0.3, alpha: 1).cgColor)
-		ctx.setLineWidth(strokeWidth)
-		ctx.strokePath()
-
 		ctx.move(to: figureCenter)
-		ctx.addLine(to: CGPoint(x: figureCenter.x + cos(-halfPi) * (figureRadius - strokeWidth - circleRadius), y: figureCenter.y + sin(-halfPi) * (figureRadius - strokeWidth - circleRadius)))
+		ctx.addLine(to: CGPoint(x: figureCenter.x + cos(-halfPi) * (figureRadius - shapeRadius), y: figureCenter.y + sin(-halfPi) * (figureRadius - shapeRadius)))
 		ctx.setLineWidth(1)
 		ctx.strokePath()
 	}
@@ -105,24 +86,11 @@ class ShapeLayer: CAShapeLayer {
 
 	override func layoutSublayers() {
 		super.layoutSublayers()
-
 		if !self.didSetup {
 			self.setup()
 			self.didSetup = true
 		}
-
 		updatePath()
-	}
-
-	override func action(forKey key: String) -> CAAction? {
-		print(key)
-		if key == #keyPath(position) {
-			if self.value(forKey:"suppressPositionAnimation") != nil {
-				print("key: \(key)")
-				return nil
-			}
-		}
-		return super.action(forKey:key)
 	}
 
 	func setup() {
@@ -131,11 +99,21 @@ class ShapeLayer: CAShapeLayer {
 		self.backgroundColor = UIColor.clear.cgColor
 		self.fillColor = fColor ?? UIColor.clear.cgColor
 		self.strokeColor = sColor ?? UIColor.black.cgColor
-
 		self.setValue(true, forKey:"suppressPositionAnimation")
 	}
 
+	override func action(forKey key: String) -> CAAction? {
+		//print(key)
+		if key == #keyPath(position) || key == #keyPath(bounds) {
+			if self.value(forKey:"suppressPositionAnimation") != nil {
+				print("key: \(key)")
+				return nil
+			}
+		}
+		return super.action(forKey:key)
+	}
+
 	func updatePath() {
-		self.path = UIBezierPath(ovalIn: CGRect(origin: pathOrigin, size: pathSize).insetBy(dx: self.lineWidth/2, dy: self.lineWidth/2)).cgPath
+		self.path = UIBezierPath(ovalIn: self.bounds.insetBy(dx: self.lineWidth/2, dy: self.lineWidth/2)).cgPath
 	}
 }

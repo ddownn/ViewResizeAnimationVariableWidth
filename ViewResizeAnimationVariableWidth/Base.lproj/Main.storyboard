@@ -24,9 +24,13 @@
                                     <constraint firstAttribute="width" priority="750" constant="350" id="qAo-HP-gTB" userLabel="Width Large"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VKN-a7-m1b" userLabel="Resize Button">
+                                <rect key="frame" x="20" y="772" width="374" height="30"/>
+                                <state key="normal" title="Resize"/>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bk0-qx-Gch">
                                 <rect key="frame" x="20" y="812" width="374" height="30"/>
-                                <state key="normal" title="Toggle"/>
+                                <state key="normal" title="Rotate"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -36,17 +40,22 @@
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="FZZ-Q4-iqx"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Qaf-xG-npg"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="bottom" priority="750" constant="-20" id="adf-1g-EcX"/>
+                            <constraint firstItem="bk0-qx-Gch" firstAttribute="trailing" secondItem="VKN-a7-m1b" secondAttribute="trailing" id="bLQ-IO-hhf"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bk0-qx-Gch" secondAttribute="trailing" constant="20" id="c4X-qi-wUU"/>
+                            <constraint firstItem="bk0-qx-Gch" firstAttribute="top" secondItem="VKN-a7-m1b" secondAttribute="bottom" constant="10" id="cyT-bO-VmA"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="i7R-Tm-ZVE"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" priority="750" constant="20" id="n5e-TT-NtE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="leading" secondItem="bk0-qx-Gch" secondAttribute="leading" constant="-20" id="tXe-ct-722"/>
+                            <constraint firstItem="bk0-qx-Gch" firstAttribute="leading" secondItem="VKN-a7-m1b" secondAttribute="leading" id="wap-J5-4Ke"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="containerView" destination="7EI-wL-Fkl" id="jXb-VH-VAM"/>
+                        <outlet property="containerViewWidthLarge" destination="qAo-HP-gTB" id="VFn-pF-Gou"/>
                         <outlet property="containerViewWidthSmall" destination="0rD-6b-MQg" id="Dn1-kK-JT6"/>
-                        <outlet property="toggleButton" destination="bk0-qx-Gch" id="Zmz-FK-Ak1"/>
+                        <outlet property="resizeButton" destination="VKN-a7-m1b" id="0sK-ud-3Xb"/>
+                        <outlet property="rotateButton" destination="bk0-qx-Gch" id="Zmz-FK-Ak1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
