@@ -8,6 +8,10 @@
 
 import UIKit
 
+let pi = CGFloat.pi
+let halfPi = CGFloat.pi / 2
+let twoPi: CGFloat = .pi * 2
+
 class ViewController: UIViewController {
 
 	var safeAreaLG = UILayoutGuide()
@@ -56,13 +60,12 @@ class ViewController: UIViewController {
 
 		self.updateConstraints()
 
-		let dur = 0.3
-		let start = 0.0
-
 		self.view.layoutIfNeeded()
-		UIView.animateKeyframes(withDuration: dur, delay: 0, animations: {
-			UIView.addKeyframe(withRelativeStartTime: start, relativeDuration: 1, animations: {
-				self.updateConstraints()
+		UIView.animateKeyframes(withDuration: coordinator.transitionDuration, delay: 0, animations: {
+			UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
+
+				self.resize(sender: self)
+
 			})
 			self.view.layoutIfNeeded()
 		})
@@ -85,7 +88,9 @@ class ViewController: UIViewController {
 
 		UIView.animateKeyframes(withDuration: dur, delay: 0, animations: {
 			UIView.addKeyframe(withRelativeStartTime: start, relativeDuration: 1, animations: {
+
 				self.updateConstraints()
+
 			})
 			self.view.layoutIfNeeded()
 		})
