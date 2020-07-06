@@ -14,10 +14,9 @@ class ContainerView: UIView {
 }
 
 class ContainerLayer: CALayer, CALayerDelegate {
-
-	var shape = ShapeLayer()
-
 	var didSetup = false
+	var shape = ShapeLayer()
+	var shapeLineWidth: CGFloat = 1
 
 	var figureCenter: CGPoint { return CGPoint(x: self.bounds.midX, y: self.bounds.midY) }
 	var figureDiameter: CGFloat { return min(self.bounds.width, self.bounds.height) }
@@ -26,19 +25,14 @@ class ContainerLayer: CALayer, CALayerDelegate {
 	var shapeDiameter: CGFloat { return round(figureDiameter / 5) }
 	var shapeRadius: CGFloat { return shapeDiameter/2 }
 	var locRadius: CGFloat { return figureRadius - shapeRadius }
-
-	var shapeLineWidth: CGFloat = 1
-
 	var unitLoc: CGPoint { return CGPoint(x: figureCenter.x + cos(-halfPi) * locRadius, y: figureCenter.y + sin(-halfPi) * locRadius) }
 
 	override func layoutSublayers() {
 		super.layoutSublayers()
-
 		if !self.didSetup {
 			self.setup()
 			self.didSetup = true
 		}
-
 		updateShapeBounds()
 	}
 
@@ -46,25 +40,20 @@ class ContainerLayer: CALayer, CALayerDelegate {
 		self.contentsScale = UIScreen.main.scale
 		self.backgroundColor = UIColor.systemYellow.cgColor
 		self.needsDisplayOnBoundsChange = true
-
 		self.shape.contentsScale = UIScreen.main.scale
 		self.addSublayer(shape)
-
 		self.shape.strokeWidth = shapeLineWidth
 		self.shape.fColor = UIColor(red:0.9, green:0.95, blue:0.93, alpha:0.9).cgColor
 		self.shape.sColor = UIColor.black.cgColor
 	}
 
 	func updateShapeBounds() {
-
 		self.shape.bounds = CGRect(x: 0, y: 0, width: shapeDiameter, height: shapeDiameter)
 		self.shape.position = unitLoc
-
 		self.shape.updatePath()
 	}
 
 	override func draw(in ctx: CGContext) {
-
 		ctx.move(to: figureCenter)
 		ctx.addLine(to: CGPoint(x: figureCenter.x + cos(-halfPi) * (figureRadius - shapeRadius), y: figureCenter.y + sin(-halfPi) * (figureRadius - shapeRadius)))
 		ctx.setLineWidth(1)
@@ -73,13 +62,7 @@ class ContainerLayer: CALayer, CALayerDelegate {
 }
 
 class ShapeLayer: CAShapeLayer {
-
 	var didSetup = false
-
-	var diameter: CGFloat { return self.bounds.width }
-	var pathOrigin: CGPoint { return CGPoint(x: self.bounds.minX, y: self.bounds.minY) }
-	var pathSize: CGSize {return CGSize(width: self.diameter, height: self.diameter) }
-
 	var strokeWidth: CGFloat?
 	var fColor: CGColor?
 	var sColor: CGColor?
@@ -103,7 +86,6 @@ class ShapeLayer: CAShapeLayer {
 	}
 
 	override func action(forKey key: String) -> CAAction? {
-		//print(key)
 		if key == #keyPath(position) || key == #keyPath(bounds) {
 			if self.value(forKey:"suppressPositionAnimation") != nil {
 				print("key: \(key)")

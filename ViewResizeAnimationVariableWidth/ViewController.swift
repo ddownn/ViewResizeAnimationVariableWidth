@@ -14,9 +14,6 @@ let twoPi: CGFloat = .pi * 2
 
 class ViewController: UIViewController {
 
-	var safeAreaLG = UILayoutGuide()
-	var lg = UILayoutGuide()
-
 	@IBOutlet weak var containerViewWidthSmall: NSLayoutConstraint!
 	@IBOutlet weak var containerViewWidthLarge: NSLayoutConstraint!
 
@@ -29,47 +26,27 @@ class ViewController: UIViewController {
 
 	override func loadView() {
 		super.loadView()
-
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 		containerView.contentMode = .redraw
 		containerView.backgroundColor = .clear
-
 		resizeButton.translatesAutoresizingMaskIntoConstraints = false
 		resizeButton.addTarget(self, action: #selector(self.resize(sender:)), for: .touchUpInside)
-
 		rotateButton.translatesAutoresizingMaskIntoConstraints = false
 		rotateButton.addTarget(self, action: #selector(self.rotate(sender:)), for: .touchUpInside)
-
 		containerLayer = containerView.layer as? ContainerLayer
-	}
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
-
-	}
-
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		//		print("viewDidLayoutSubviews(): \(containerView.bounds)\n")
 	}
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
-
 		self.isLarge.toggle()
-
 		self.updateConstraints()
-
 		self.view.layoutIfNeeded()
 		UIView.animateKeyframes(withDuration: coordinator.transitionDuration, delay: 0, animations: {
 			UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
-
 				self.resize(sender: self)
-
 			})
 			self.view.layoutIfNeeded()
 		})
-
 	}
 
 	func updateConstraints() {
@@ -79,33 +56,21 @@ class ViewController: UIViewController {
 	}
 
 	@objc func resize(sender: Any) {
-
 		self.view.layoutIfNeeded()
 		self.isLarge.toggle()
-
-		let dur = 0.3
-		let start = 0.0
-
-		UIView.animateKeyframes(withDuration: dur, delay: 0, animations: {
-			UIView.addKeyframe(withRelativeStartTime: start, relativeDuration: 1, animations: {
-
+		UIView.animateKeyframes(withDuration: 0.3, delay: 0, animations: {
+			UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
 				self.updateConstraints()
-
 			})
 			self.view.layoutIfNeeded()
 		})
 	}
 
 	@objc func rotate(sender: Any) {
-
 		self.view.layoutIfNeeded()
 		self.isLarge.toggle()
-
-		let dur = 0.3
-		let start = 0.0
-
-		UIView.animateKeyframes(withDuration: dur, delay: 0, animations: {
-			UIView.addKeyframe(withRelativeStartTime: start, relativeDuration: 1, animations: {
+		UIView.animateKeyframes(withDuration: 0.3, delay: 0, animations: {
+			UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
 				self.containerLayer.transform = CATransform3DRotate(self.containerLayer.transform, pi/2, 0, 0, 1)
 			})
 			self.view.layoutIfNeeded()
