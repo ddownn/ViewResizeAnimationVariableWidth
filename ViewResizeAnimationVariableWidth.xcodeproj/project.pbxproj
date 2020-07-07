@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D349CC624B36626009EBD3C /* SF-Mono-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Regular.otf"; sourceTree = "<group>"; };
 		7D5AE6AD24AE137F00D693F6 /* ViewResizeAnimationVariableWidth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewResizeAnimationVariableWidth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D5AE6B024AE137F00D693F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D5AE6B224AE137F00D693F6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +67,7 @@
 				7D5AE6B924AE138200D693F6 /* Assets.xcassets */,
 				7D5AE6BB24AE138200D693F6 /* LaunchScreen.storyboard */,
 				7D5AE6BE24AE138200D693F6 /* Info.plist */,
+				7D349CC624B36626009EBD3C /* SF-Mono-Regular.otf */,
 			);
 			path = ViewResizeAnimationVariableWidth;
 			sourceTree = "<group>";

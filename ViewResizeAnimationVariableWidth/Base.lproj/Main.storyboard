@@ -11,9 +11,8 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ViewResizeAnimationVariableWidth" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7EI-wL-Fkl" customClass="ContainerView" customModule="ViewResizeAnimationVariableWidth" customModuleProvider="target">
                                 <rect key="frame" x="107" y="348" width="200" height="200"/>
@@ -24,11 +23,11 @@
                                     <constraint firstAttribute="width" priority="750" constant="350" id="qAo-HP-gTB" userLabel="Width Large"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VKN-a7-m1b" userLabel="Resize Button">
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VKN-a7-m1b" userLabel="Resize Button">
                                 <rect key="frame" x="20" y="772" width="374" height="30"/>
                                 <state key="normal" title="Resize"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bk0-qx-Gch">
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bk0-qx-Gch">
                                 <rect key="frame" x="20" y="812" width="374" height="30"/>
                                 <state key="normal" title="Rotate"/>
                             </button>
@@ -37,6 +36,7 @@
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="bk0-qx-Gch" secondAttribute="bottom" constant="20" id="ATN-8J-xL6"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-20" id="Dgx-ta-qgv"/>
+                            <constraint firstItem="bk0-qx-Gch" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="E8N-gn-Ked"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="FZZ-Q4-iqx"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Qaf-xG-npg"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="bottom" priority="750" constant="-20" id="adf-1g-EcX"/>
@@ -45,7 +45,6 @@
                             <constraint firstItem="bk0-qx-Gch" firstAttribute="top" secondItem="VKN-a7-m1b" secondAttribute="bottom" constant="10" id="cyT-bO-VmA"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="i7R-Tm-ZVE"/>
                             <constraint firstItem="7EI-wL-Fkl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" priority="750" constant="20" id="n5e-TT-NtE"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="leading" secondItem="bk0-qx-Gch" secondAttribute="leading" constant="-20" id="tXe-ct-722"/>
                             <constraint firstItem="bk0-qx-Gch" firstAttribute="leading" secondItem="VKN-a7-m1b" secondAttribute="leading" id="wap-J5-4Ke"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -60,7 +59,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="132" y="138"/>
+            <point key="canvasLocation" x="131.8840579710145" y="137.94642857142856"/>
         </scene>
     </scenes>
 </document>

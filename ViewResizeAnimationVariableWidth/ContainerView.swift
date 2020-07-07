@@ -25,7 +25,9 @@ class ContainerLayer: CALayer, CALayerDelegate {
 	var shapeDiameter: CGFloat { return round(figureDiameter / 5) }
 	var shapeRadius: CGFloat { return shapeDiameter/2 }
 	var locRadius: CGFloat { return figureRadius - shapeRadius }
-	var unitLoc: CGPoint { return CGPoint(x: figureCenter.x + cos(-halfPi) * locRadius, y: figureCenter.y + sin(-halfPi) * locRadius) }
+	var angle: CGFloat { return -halfPi }
+
+	var unitLoc: CGPoint { return CGPoint(x: figureCenter.x + cos(angle) * locRadius, y: figureCenter.y + sin(angle) * locRadius) }
 
 	override func layoutSublayers() {
 		super.layoutSublayers()
@@ -33,7 +35,7 @@ class ContainerLayer: CALayer, CALayerDelegate {
 			self.setup()
 			self.didSetup = true
 		}
-		updateShapeBounds()
+		updateShape()
 	}
 
 	func setup() {
@@ -45,9 +47,10 @@ class ContainerLayer: CALayer, CALayerDelegate {
 		self.shape.strokeWidth = shapeLineWidth
 		self.shape.fColor = UIColor(red:0.9, green:0.95, blue:0.93, alpha:0.9).cgColor
 		self.shape.sColor = UIColor.black.cgColor
+		self.shape.position = unitLoc
 	}
 
-	func updateShapeBounds() {
+	func updateShape() {
 		self.shape.bounds = CGRect(x: 0, y: 0, width: shapeDiameter, height: shapeDiameter)
 		self.shape.position = unitLoc
 		self.shape.updatePath()
@@ -55,7 +58,7 @@ class ContainerLayer: CALayer, CALayerDelegate {
 
 	override func draw(in ctx: CGContext) {
 		ctx.move(to: figureCenter)
-		ctx.addLine(to: CGPoint(x: figureCenter.x + cos(-halfPi) * (figureRadius - shapeRadius), y: figureCenter.y + sin(-halfPi) * (figureRadius - shapeRadius)))
+		ctx.addLine(to: unitLoc)
 		ctx.setLineWidth(1)
 		ctx.strokePath()
 	}
@@ -82,20 +85,22 @@ class ShapeLayer: CAShapeLayer {
 		self.backgroundColor = UIColor.clear.cgColor
 		self.fillColor = fColor ?? UIColor.clear.cgColor
 		self.strokeColor = sColor ?? UIColor.black.cgColor
+
 		self.setValue(true, forKey:"suppressPositionAnimation")
 	}
 
+	func updatePath() {
+
+		self.path = UIBezierPath(ovalIn: self.bounds.insetBy(dx: self.lineWidth/2, dy: self.lineWidth/2)).cgPath
+	}
+
 	override func action(forKey key: String) -> CAAction? {
-		if key == #keyPath(position) || key == #keyPath(bounds) {
+		if key == #keyPath(position) {
 			if self.value(forKey:"suppressPositionAnimation") != nil {
-				print("key: \(key)")
+				print("key: \(key) animation supressed")
 				return nil
 			}
 		}
 		return super.action(forKey:key)
-	}
-
-	func updatePath() {
-		self.path = UIBezierPath(ovalIn: self.bounds.insetBy(dx: self.lineWidth/2, dy: self.lineWidth/2)).cgPath
 	}
 }
