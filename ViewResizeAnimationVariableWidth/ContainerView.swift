@@ -32,12 +32,11 @@ class ContainerLayer: CALayer, CALayerDelegate {
 
 	override func layoutSublayers() {
 		super.layoutSublayers()
-		if self.didSetup {
-			updateFigure()
-		} else {
+		if !self.didSetup {
 			self.setup()
 			self.didSetup = true
 		}
+		updateFigure()
 		setNeedsDisplay()
 	}
 
