@@ -31,6 +31,9 @@ class ViewController: UIViewController {
 
 	var isLarge = false
 
+	var pCenterX: CGFloat!
+	var pPosX: CGFloat!
+
 	override func loadView() {
 		super.loadView()
 
@@ -41,6 +44,7 @@ class ViewController: UIViewController {
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 		containerView.contentMode = .redraw
 		containerView.backgroundColor = .clear
+
 		resizeButton.translatesAutoresizingMaskIntoConstraints = false
 		resizeButton.addTarget(self, action: #selector(self.resize(sender:)), for: .touchUpInside)
 		rotateButton.translatesAutoresizingMaskIntoConstraints = false
@@ -62,42 +66,72 @@ class ViewController: UIViewController {
 	}
 
 	@objc func animationDidUpdate(displayLink: CADisplayLink) {
-		let presentationLayer = self.containerLayer.shape.presentation()!
 
-		let newPosition = presentationLayer.position
-		print(newPosition)
-//		self.containerLayer.shape.position = newPosition
+		let newCenter = self.containerLayer.presentation()!.bounds.center
+		let newCentX = round(newCenter.x)
+		let newCentY = round(newCenter.y)
+
+		let newPosition = self.containerLayer.shape.presentation()!.position
+		let newPosX = round(newPosition.x)
+		let newPosY = round(newPosition.y)
+
+		let new = CGPoint(x: newCenter.x + cos(containerLayer.angle) * containerLayer.locRadius, y: newCenter.y + sin(containerLayer.angle) * containerLayer.locRadius)
+		containerLayer.shape.position = new
+
+		if pCenterX != newCentX {
+//			print("container cent:(\(newCentX), \(newCentY)) :: shape position:(\(newPosX), \(newPosY))")
+//			containerLayer.updateShapePos(newPos: new)
+			pCenterX = newCentX
+		}
 	}
 
 	func updateConstraints() {
 		containerViewWidthSmall.priority = isLarge ? .defaultHigh-1 : .defaultHigh+1
-		self.containerLayer.setNeedsDisplay()
-		self.view.layoutIfNeeded()
 	}
 
 	@objc func resize(sender: Any) {
 
-		let oldLoc = self.containerLayer.shape.position
+		// MARK:- animate containerLayer bounds & shape position
+		// capture bounds value before changing
+		let oldBounds = self.containerLayer.bounds
+		// capture shape position value before changing
+		let oldPos = self.containerLayer.shape.position
 
+		// update the constraints to change the bounds
+		isLarge.toggle()
+		updateConstraints()
 		self.view.layoutIfNeeded()
-		self.isLarge.toggle()
+		let newBounds = self.containerLayer.bounds
+		let newPos = self.containerLayer.unitLoc
 
-		self.updateConstraints()
+		// set up the bounds animation and add it to containerLayer
+		let baContainerBounds = CABasicAnimation(keyPath: "bounds")
+		baContainerBounds.fromValue = oldBounds
+		baContainerBounds.toValue = newBounds
+		containerLayer.add(baContainerBounds, forKey: "bounds")
+
+		// set up the position animation and add it to shape layer
+		let baShapePosition = CABasicAnimation(keyPath: "position")
+		baShapePosition.fromValue = oldPos
+		baShapePosition.toValue = newPos
+		containerLayer.shape.add(baShapePosition, forKey: "position")
+
+		containerLayer.setNeedsLayout()
 		self.view.layoutIfNeeded()
 
-		print(oldLoc, self.containerLayer.unitLoc)
-
-		let anim = CABasicAnimation(keyPath: "position")
-		anim.fromValue = oldLoc
-		anim.toValue = self.containerLayer.unitLoc
-
-		self.containerLayer.shape.add(anim, forKey: "position")
-		self.containerLayer.shape.layoutIfNeeded()
-		self.containerLayer.updateShape()
-//		self.containerLayer.shape.position = self.containerLayer.unitLoc
-//		self.containerLayer.shape.updatePath()
-
-		self.view.layoutIfNeeded()
+		//		if let newCenter = self.containerLayer.presentation()?.bounds.center {
+		//
+		//			let newFigureDiameter = min(self.containerLayer.bounds.width, self.containerLayer.bounds.height)
+		//			let newFigureRadius = newFigureDiameter/2
+		//
+		//			let newShapeDiameter = round(newFigureDiameter / 5)
+		//			let newShapeRadius = newShapeDiameter/2
+		//
+		//			let newLocRadius = newFigureRadius - newShapeRadius
+		//
+		//			let newLoc = CGPoint(x: newCenter.x + cos(self.containerLayer.angle) * newLocRadius, y: newCenter.y + sin(self.containerLayer.angle) * newLocRadius)
+		//
+		//			containerLayer.updateShapePos(newPos: newLoc)
 	}
 
 	@objc func rotate(sender: Any) {

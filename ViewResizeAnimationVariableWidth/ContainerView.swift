@@ -14,46 +14,61 @@ class ContainerView: UIView {
 }
 
 class ContainerLayer: CALayer, CALayerDelegate {
+
 	var didSetup = false
+
+	var figureCenter: CGPoint!
+	var figureDiameter: CGFloat!
+	var figureRadius: CGFloat!
+
 	var shape = ShapeLayer()
 	var shapeLineWidth: CGFloat = 1
+	var shapeDiameter: CGFloat!
+	var shapeRadius: CGFloat!
 
-	var figureCenter: CGPoint { return CGPoint(x: self.bounds.midX, y: self.bounds.midY) }
-	var figureDiameter: CGFloat { return min(self.bounds.width, self.bounds.height) }
-	var figureRadius: CGFloat { return figureDiameter / 2 }
-
-	var shapeDiameter: CGFloat { return round(figureDiameter / 5) }
-	var shapeRadius: CGFloat { return shapeDiameter/2 }
-	var locRadius: CGFloat { return figureRadius - shapeRadius }
-	var angle: CGFloat { return -halfPi }
-
-	var unitLoc: CGPoint { return CGPoint(x: figureCenter.x + cos(angle) * locRadius, y: figureCenter.y + sin(angle) * locRadius) }
+	var locRadius: CGFloat!
+	var angle: CGFloat!
+	var unitLoc: CGPoint!
 
 	override func layoutSublayers() {
 		super.layoutSublayers()
-		if !self.didSetup {
+		if self.didSetup {
+			updateFigure()
+		} else {
 			self.setup()
 			self.didSetup = true
 		}
-		updateShape()
+		setNeedsDisplay()
+	}
+
+	func updateFigure() {
+		figureCenter = self.bounds.center
+		figureDiameter = min(self.bounds.width, self.bounds.height)
+		figureRadius = figureDiameter/2
+
+		shapeDiameter = round(figureDiameter / 5)
+		shapeRadius = shapeDiameter/2
+
+		locRadius = figureRadius - shapeRadius
+		angle = -halfPi
+		unitLoc = CGPoint(x: self.figureCenter.x + cos(angle) * locRadius, y: self.figureCenter.y + sin(angle) * locRadius)
+
+		shape.bounds = CGRect(x: 0, y: 0, width: shapeDiameter, height: shapeDiameter)
+		shape.position = unitLoc
+		shape.updatePath()
 	}
 
 	func setup() {
-		self.contentsScale = UIScreen.main.scale
-		self.backgroundColor = UIColor.systemYellow.cgColor
-		self.needsDisplayOnBoundsChange = true
-		self.shape.contentsScale = UIScreen.main.scale
-		self.addSublayer(shape)
-		self.shape.strokeWidth = shapeLineWidth
-		self.shape.fColor = UIColor(red:0.9, green:0.95, blue:0.93, alpha:0.9).cgColor
-		self.shape.sColor = UIColor.black.cgColor
-		self.shape.position = unitLoc
-	}
+		contentsScale = UIScreen.main.scale
+		backgroundColor = UIColor.systemYellow.cgColor
 
-	func updateShape() {
-		self.shape.bounds = CGRect(x: 0, y: 0, width: shapeDiameter, height: shapeDiameter)
-		self.shape.position = unitLoc
-		self.shape.updatePath()
+		shape.contentsScale = UIScreen.main.scale
+		addSublayer(shape)
+		shape.strokeWidth = shapeLineWidth
+		shape.fColor = UIColor(red:0.9, green:0.95, blue:0.93, alpha:0.9).cgColor
+		shape.sColor = UIColor.black.cgColor
+
+		updateFigure()
 	}
 
 	override func draw(in ctx: CGContext) {
@@ -97,7 +112,7 @@ class ShapeLayer: CAShapeLayer {
 	override func action(forKey key: String) -> CAAction? {
 		if key == #keyPath(position) {
 			if self.value(forKey:"suppressPositionAnimation") != nil {
-				print("key: \(key) animation supressed")
+				//print("key: \(key) animation supressed")
 				return nil
 			}
 		}
