@@ -63,9 +63,18 @@ class ViewController: UIViewController {
 	}
 
 	@objc func animationDidUpdate(displayLink: CADisplayLink) {
+
 		let newCenter = self.containerLayer.presentation()!.bounds.center
-		let new = CGPoint(x: newCenter.x + cos(containerLayer.angle) * containerLayer.locRadius, y: newCenter.y + sin(containerLayer.angle) * containerLayer.locRadius)
-		containerLayer.shape.position = new
+		let newUnitLoc = CGPoint(x: newCenter.x + cos(containerLayer.angle) * containerLayer.locRadius, y: newCenter.y + sin(containerLayer.angle) * containerLayer.locRadius)
+		containerLayer.unitLoc = newUnitLoc
+
+		containerLayer.shape.position = newUnitLoc
+
+		let newSize = self.containerLayer.shape.presentation()!.bounds.size
+		containerLayer.shapeSize = newSize
+		containerLayer.setNeedsDisplay()
+		print(newSize)
+
 	}
 
 	func updateConstraints() {
@@ -74,30 +83,43 @@ class ViewController: UIViewController {
 
 	@objc func resize(sender: Any) {
 
-		// MARK:- animate containerLayer bounds & shape position
-		// capture bounds value before changing
-		let oldBounds = self.containerLayer.bounds
+		// MARK:- animate containerLayer bounds, shape bounds & shape position
+
+		// capture container bounds value before changing
+		let oldContainerBounds = self.containerLayer.bounds
+
 		// capture shape position value before changing
-		let oldPos = self.containerLayer.shape.position
+		let oldShapePos = self.containerLayer.shape.position
+		// capture shape position value before changing
+		let oldShapeBoundsSize = self.containerLayer.shape.bounds.size
 
 		// update the constraints to change the bounds
 		isLarge.toggle()
 		updateConstraints()
 		self.view.layoutIfNeeded()
-		let newBounds = self.containerLayer.bounds
-		let newPos = self.containerLayer.unitLoc
 
-		// set up the bounds animation and add it to containerLayer
+		// store updated values
+		let newContainerBounds = self.containerLayer.bounds
+		let newShapePos = self.containerLayer.unitLoc
+		let newShapeBoundsSize = self.containerLayer.shape.bounds.size
+
+		// set up the container bounds animation and add it to containerLayer
 		let baContainerBounds = CABasicAnimation(keyPath: "bounds")
-		baContainerBounds.fromValue = oldBounds
-		baContainerBounds.toValue = newBounds
-		containerLayer.add(baContainerBounds, forKey: "bounds")
+		baContainerBounds.fromValue = oldContainerBounds
+		baContainerBounds.toValue = newContainerBounds
+		containerLayer.add(baContainerBounds, forKey: baContainerBounds.keyPath)
 
-		// set up the position animation and add it to shape layer
+		// set up the shape position animation and add it to shape layer
 		let baShapePosition = CABasicAnimation(keyPath: "position")
-		baShapePosition.fromValue = oldPos
-		baShapePosition.toValue = newPos
-		containerLayer.shape.add(baShapePosition, forKey: "position")
+		baShapePosition.fromValue = oldShapePos
+		baShapePosition.toValue = newShapePos
+		containerLayer.shape.add(baShapePosition, forKey: baShapePosition.keyPath)
+
+		// set up the shape bounds animation and add it to shape layer
+		let baShapeBounds = CABasicAnimation(keyPath: "bounds")
+		baShapeBounds.fromValue = oldShapeBoundsSize
+		baShapeBounds.toValue = newShapeBoundsSize
+		containerLayer.shape.add(baShapeBounds, forKey: baShapeBounds.keyPath)
 
 		containerLayer.setNeedsLayout()
 		self.view.layoutIfNeeded()

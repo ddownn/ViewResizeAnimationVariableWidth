@@ -25,6 +25,7 @@ class ContainerLayer: CALayer, CALayerDelegate {
 	var shapeLineWidth: CGFloat = 1
 	var shapeDiameter: CGFloat!
 	var shapeRadius: CGFloat!
+	var shapeSize: CGSize!
 
 	var locRadius: CGFloat!
 	var angle: CGFloat!
@@ -37,7 +38,6 @@ class ContainerLayer: CALayer, CALayerDelegate {
 			self.didSetup = true
 		}
 		updateFigure()
-		setNeedsDisplay()
 	}
 
 	func updateFigure() {
@@ -45,16 +45,34 @@ class ContainerLayer: CALayer, CALayerDelegate {
 		figureDiameter = min(self.bounds.width, self.bounds.height)
 		figureRadius = figureDiameter/2
 
-		shapeDiameter = round(figureDiameter / 5)
+		shapeDiameter = figureDiameter / 5
 		shapeRadius = shapeDiameter/2
+
+		shapeSize = CGSize(width: shapeDiameter, height: shapeDiameter)
 
 		locRadius = figureRadius - shapeRadius
 		angle = -halfPi
 		unitLoc = CGPoint(x: self.figureCenter.x + cos(angle) * locRadius, y: self.figureCenter.y + sin(angle) * locRadius)
 
 		shape.bounds = CGRect(x: 0, y: 0, width: shapeDiameter, height: shapeDiameter)
-		shape.position = unitLoc
-		shape.updatePath()
+		shape.position = CGPoint(x: -shapeSize.width/2, y: -shapeSize.height/2)
+
+		shape.setNeedsLayout()
+	}
+
+	func updateShapeSize(newDiameter: CGFloat) {
+		shapeDiameter = newDiameter
+		
+		shapeSize = CGSize(width: shapeDiameter, height: shapeDiameter)
+
+		locRadius = figureRadius - shapeRadius
+		angle = -halfPi
+		unitLoc = CGPoint(x: self.figureCenter.x + cos(angle) * locRadius, y: self.figureCenter.y + sin(angle) * locRadius)
+
+		shape.bounds = CGRect(x: 0, y: 0, width: shapeDiameter, height: shapeDiameter)
+		shape.position = CGPoint(x: unitLoc, y: unitLoc)
+
+		shape.setNeedsLayout()
 	}
 
 	func setup() {
@@ -84,13 +102,17 @@ class ShapeLayer: CAShapeLayer {
 	var fColor: CGColor?
 	var sColor: CGColor?
 
+	var circlePosition: CGPoint = .zero
+	var circleSize: CGSize = .zero
+	var circleBounds: CGRect = .zero
+
 	override func layoutSublayers() {
 		super.layoutSublayers()
 		if !self.didSetup {
 			self.setup()
 			self.didSetup = true
 		}
-		updatePath()
+		self.path = UIBezierPath(ovalIn: self.bounds).cgPath
 	}
 
 	func setup() {
@@ -101,17 +123,21 @@ class ShapeLayer: CAShapeLayer {
 		self.strokeColor = sColor ?? UIColor.black.cgColor
 
 		self.setValue(true, forKey:"suppressPositionAnimation")
+		self.setValue(true, forKey:"suppressBoundsAnimation")
 	}
 
-	func updatePath() {
-
-		self.path = UIBezierPath(ovalIn: self.bounds.insetBy(dx: self.lineWidth/2, dy: self.lineWidth/2)).cgPath
-	}
 
 	override func action(forKey key: String) -> CAAction? {
+//		print(key)
 		if key == #keyPath(position) {
 			if self.value(forKey:"suppressPositionAnimation") != nil {
-				//print("key: \(key) animation supressed")
+//				print("key: \(key) animation supressed")
+				return nil
+			}
+		}
+		if key == #keyPath(bounds) {
+			if self.value(forKey:"suppressBoundsAnimation") != nil {
+//				print("key: \(key) animation supressed")
 				return nil
 			}
 		}
